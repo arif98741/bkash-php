@@ -1,0 +1,21 @@
+{
+    "name": "xenon/bkash-php",
+    "description": "This is a php sdk for integrating with your php application easily",
+    "require": {
+        "guzzlehttp/guzzle": "^6.5.8 | ^7.8"
+    },
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Xenon\\BkashPhp\\": "src/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Xenon\\BkashPhp\\BkashPhpServiceProvider"
+            ]
+        }
+    },
+    "minimum-stability": "dev"
+}
