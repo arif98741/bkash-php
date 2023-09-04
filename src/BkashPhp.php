@@ -4,6 +4,7 @@ namespace Xenon\BkashPhp;
 
 use Xenon\BkashPhp\Handler\Exception\RenderException;
 use Xenon\BkashPhp\Request\BkashRequest;
+use Xenon\BkashPhp\Request\Token;
 
 class BkashPhp
 {
@@ -66,13 +67,7 @@ class BkashPhp
      */
     private function generateToken(): void
     {
-        $tokenRequestObject = new BkashRequest($this);
-        $tokenResponse      = $tokenRequestObject->post('v1.2.0-beta/tokenized/checkout/token/grant');
-
-        if ($tokenResponse->getStatusCode() == 200) {
-            $jsonObject = $tokenResponse->getContentsObject();
-            $this->token = $jsonObject->id_token;
-        }
+        $this->token = Token::getToken($this);
     }
 
     /**

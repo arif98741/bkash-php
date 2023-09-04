@@ -13,7 +13,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "Xenon\\BkashPhp\\BkashPhpServiceProvider"
+
             ]
         }
     },
