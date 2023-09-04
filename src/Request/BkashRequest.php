@@ -2,6 +2,7 @@
 
 namespace Xenon\BkashPhp\Request;
 
+use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Xenon\BkashPhp\Handler\Exception\RenderException;
@@ -13,16 +14,28 @@ class BkashRequest
      * @var string
      */
     private string $baseUrl = 'https://tokenized.sandbox.bka.sh';
-    private string $environment = 'sandbox';
     private array $headers;
     private array $params;
     private $responseBody;
     private string $requestEndpoint;
     private object $response;
     private int $statusCode;
+    private string $environment;
+    private mixed $requestObject;
+    private $requestFullString;
 
-    public function __construct()
+    /**
+     * @param $requestObject
+     */
+    public function __construct($requestObject)
     {
+        $this->requestObject    = $requestObject;
+        $this->headers          = $this->requestObject->getHeader();
+        $this->params           = $this->requestObject->getConfig();
+        $this->environment      = $this->requestObject->getEnvironment();
+        if ($this->environment == 'production') {
+            $this->baseUrl = 'https://github.com';
+        }
 
     }
 
@@ -37,6 +50,40 @@ class BkashRequest
     }
 
     /**
+     * @return mixed
+     */
+    public function getResponseBody()
+    {
+        return $this->responseBody;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContents()
+    {
+        return $this->responseBody->getContents();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getContentsObject()
+    {
+        return json_decode($this->responseBody->getContents());
+    }
+
+    public function getResponse(): object
+    {
+        return $this->response;
+    }
+
+    public function getStatusCode(): int
+    {
+        return $this->statusCode;
+    }
+
+    /**
      * @return BkashRequest
      * @throws RenderException
      */
@@ -47,17 +94,17 @@ class BkashRequest
 
         try {
             $options = [
-                'headers' => $this->getHeader(),
-                'query' => $this->getRequestParams(),
+                'headers'   => $this->getHeader(),
+                'query'     => $this->getRequestParams(),
             ];
 
-            $response = $client->get($this->requestFullString, $options);
-            $this->statusCode = $response->getStatusCode();
-            $this->response = $response;
+            $response           = $client->get($this->requestFullString, $options);
+            $this->statusCode   = $response->getStatusCode();
+            $this->response     = $response;
             $this->responseBody = $response->getBody();
             return $this;
 
-        } catch (\Exception|GuzzleException $e) {
+        } catch (Exception|GuzzleException $e) {
             throw new RenderException($e->getMessage());
         }
     }
@@ -73,7 +120,6 @@ class BkashRequest
         $this->requestEndpoint = $requestEndpoint;
 
         try {
-
             $options = [
                 'headers' => $this->getHeader(),
                 'json' => $this->getRequestParams(),
@@ -86,12 +132,19 @@ class BkashRequest
             $this->responseBody = $response->getBody();
             return $this;
 
-        } catch (\Exception|GuzzleException $e) {
+        } catch (Exception|GuzzleException $e) {
 
             throw new RenderException($e->getMessage());
         }
     }
 
-
+    /**
+     * @param array $paramData
+     * @return void
+     */
+    public function setParams(array $paramData)
+    {
+        $this->params = $paramData;
+    }
 
 }
