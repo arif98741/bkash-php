@@ -21,7 +21,7 @@ class Payment
         $paymentResponse = $bkashRequestObject->post('tokenized/checkout/create');
         $paymentObject = $paymentResponse->getContentsObject();
 
-        return (new BkashResponse($paymentResponse, $paymentObject))->getResponse();
+        return $this->getResponse($paymentResponse, $paymentObject);
     }
 
     /**
@@ -37,7 +37,7 @@ class Payment
         $paymentResponse = $bkashRequestObject->post('tokenized/checkout/execute');
         $executePaymentObject = $paymentResponse->getContentsObject();
 
-        return (new BkashResponse($paymentResponse, $executePaymentObject))->getResponse();
+        return $this->getResponse($paymentResponse, $executePaymentObject);
     }
 
     /**
@@ -53,6 +53,17 @@ class Payment
         $paymentResponse = $bkashRequestObject->post('tokenized/checkout/general/searchTransaction');
         $searchPaymentObject = $paymentResponse->getContentsObject();
 
-        return (new BkashResponse($paymentResponse, $searchPaymentObject))->getResponse();
+        return $this->getResponse($paymentResponse, $searchPaymentObject);
+    }
+
+    /**
+     * @param BkashRequest $paymentResponse
+     * @param mixed $paymentObject
+     * @return mixed
+     * @throws RenderBkashPHPException
+     */
+    private function getResponse(BkashRequest $paymentResponse, mixed $paymentObject): mixed
+    {
+        return (new BkashResponse($paymentResponse, $paymentObject))->getResponse();
     }
 }
