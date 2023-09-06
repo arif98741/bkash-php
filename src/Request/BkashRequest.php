@@ -5,7 +5,8 @@ namespace Xenon\BkashPhp\Request;
 use Exception;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
-use Xenon\BkashPhp\Handler\Exception\RenderException;
+use JsonException;
+use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException;
 
 class BkashRequest
 {
@@ -13,7 +14,7 @@ class BkashRequest
      * base url of bkash payment gateway. This will be overwritten in production environment
      * @var string
      */
-    private string $baseUrl = 'https://tokenized.sandbox.bka.sh';
+    private string $baseUrl = 'https://tokenized.sandbox.bka.sh/v1.2.0-beta/';
     private array $headers;
     private array $params;
     private $responseBody;
@@ -22,8 +23,6 @@ class BkashRequest
     private int $statusCode;
     private string $environment;
     private mixed $requestObject;
-    private $requestFullString;
-
     /**
      * @param $requestObject
      */
@@ -33,8 +32,9 @@ class BkashRequest
         $this->headers          = $this->requestObject->getHeader();
         $this->params           = $this->requestObject->getConfig();
         $this->environment      = $this->requestObject->getEnvironment();
-        if ($this->environment == 'production') {
-            $this->baseUrl = 'https://github.com';
+
+        if ($this->environment === 'production') {
+            $this->baseUrl = 'https://tokenized.pay.bka.sh/v1.2.0-beta/';
         }
 
     }
@@ -70,7 +70,7 @@ class BkashRequest
      */
     public function getContentsObject()
     {
-        return json_decode($this->responseBody->getContents());
+        return json_decode($this->getContents(), false);
     }
 
     public function getResponse(): object
@@ -84,13 +84,13 @@ class BkashRequest
     }
 
     /**
-     * @return BkashRequest
-     * @throws RenderException
+     * @param string $requestEndpoint
+     * @return $this
+     * @throws RenderBkashPHPException
      */
     public function get(string $requestEndpoint)
     {
-        $client = new Client(['base_uri' => $this->baseUrl]);
-        $this->requestEndpoint = $requestEndpoint;
+        $client = $this->getClient($requestEndpoint);
 
         try {
             $options = [
@@ -98,26 +98,25 @@ class BkashRequest
                 'query'     => $this->getRequestParams(),
             ];
 
-            $response           = $client->get($this->requestFullString, $options);
+            $response           = $client->request('get',$this->requestEndpoint, $options);
             $this->statusCode   = $response->getStatusCode();
             $this->response     = $response;
             $this->responseBody = $response->getBody();
             return $this;
 
         } catch (Exception|GuzzleException $e) {
-            throw new RenderException($e->getMessage());
+            throw new RenderBkashPHPException($e->getMessage());
         }
     }
 
     /**
      * @param string $requestEndpoint
      * @return $this
-     * @throws RenderException
+     * @throws RenderBkashPHPException
      */
     public function post(string $requestEndpoint)
     {
-        $client = new Client(['base_uri' => $this->baseUrl]);
-        $this->requestEndpoint = $requestEndpoint;
+        $client = $this->getClient($requestEndpoint);
 
         try {
             $options = [
@@ -125,16 +124,16 @@ class BkashRequest
                 'json' => $this->getRequestParams(),
             ];
 
-            $response = $client->post($this->requestEndpoint, $options);
+            $response = $client->request('post',$this->requestEndpoint, $options);
 
-            $this->statusCode = $response->getStatusCode();
-            $this->response = $response;
+            $this->statusCode   = $response->getStatusCode();
+            $this->response     = $response;
             $this->responseBody = $response->getBody();
             return $this;
 
         } catch (Exception|GuzzleException $e) {
 
-            throw new RenderException($e->getMessage());
+            throw new RenderBkashPHPException($e->getMessage());
         }
     }
 
@@ -145,6 +144,17 @@ class BkashRequest
     public function setParams(array $paramData)
     {
         $this->params = $paramData;
+    }
+
+    /**
+     * @param string $requestEndpoint
+     * @return Client
+     */
+    private function getClient(string $requestEndpoint): Client
+    {
+        $client = new Client(['base_uri' => $this->baseUrl]);
+        $this->requestEndpoint = $requestEndpoint;
+        return $client;
     }
 
 }

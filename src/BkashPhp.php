@@ -2,8 +2,9 @@
 
 namespace Xenon\BkashPhp;
 
-use Xenon\BkashPhp\Handler\Exception\RenderException;
-use Xenon\BkashPhp\Request\BkashRequest;
+use JsonException;
+use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException;
+use Xenon\BkashPhp\Request\Payment;
 use Xenon\BkashPhp\Request\Token;
 
 class BkashPhp
@@ -18,7 +19,7 @@ class BkashPhp
 
     /**
      * @param array $configuration
-     * @throws RenderException
+     * @throws RenderBkashPHPException
      */
     public function __construct(array $configuration)
     {
@@ -63,7 +64,7 @@ class BkashPhp
     }
 
     /**
-     * @throws RenderException
+     * @throws RenderBkashPHPException
      */
     private function generateToken(): void
     {
@@ -80,24 +81,15 @@ class BkashPhp
 
     /**
      * @param array $paymentData
-     * @return void
-     * @throws RenderException
+     * @return object
+     * @throws RenderBkashPHPException
+     * @throws JsonException
      */
     public function createTokenizedPayment(array $paymentData)
     {
         $this->setHeader($this->getAuthorization());
-        $tokenRequestObject = new BkashRequest($this);
-        $tokenRequestObject->setParams($paymentData);
+        return (new Payment)->createPayment($this, $paymentData);
 
-        $paymentResponse = $tokenRequestObject->post('v1.2.0-beta/tokenized/checkout/create');
-
-        if ($paymentResponse->getStatusCode() == 200) {
-            $paymentObject = $paymentResponse->getContentsObject();
-            echo "<pre>";
-            print_r($paymentObject);
-            echo '</pre>';
-            exit;
-        }
     }
 
     public function executePayment()
