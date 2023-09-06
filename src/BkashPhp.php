@@ -48,9 +48,13 @@ class BkashPhp
      * For live use "production"
      * @param string $sandboxEnvironment
      * @return BkashPhp
+     * @throws RenderBkashPHPException
      */
     public function setEnvironment(string $sandboxEnvironment = 'sandbox'): BkashPhp
     {
+        if (!in_array($sandboxEnvironment, ['sandbox', 'production'])) {
+            throw new RenderBkashPHPException("Environment $sandboxEnvironment is not allowed. Allowed environments are: sandbox, production");
+        }
         $this->environment = $sandboxEnvironment;
         return $this;
     }
@@ -92,22 +96,34 @@ class BkashPhp
 
     }
 
-    public function executePayment()
+    /**
+     * @param string $paymentId
+     * @return null
+     * @throws RenderBkashPHPException
+     */
+    public function executePayment(string $paymentId)
     {
-
-
+        $this->setHeader($this->getAuthorization());
+        $data = [
+            'paymentID' => $paymentId,
+        ];
+        return (new Payment)->executePayment($this, $data);
     }
+
 
     public function queryPayment()
     {
 
     }
 
-    public function searchTransaction()
+    public function searchTransaction(string $trxID)
     {
-
+        $this->setHeader($this->getAuthorization());
+        $data = [
+            'trxID' => $trxID,
+        ];
+        return (new Payment)->searchTransaction($this, $data);
     }
-
 
     /**
      * @return string[]

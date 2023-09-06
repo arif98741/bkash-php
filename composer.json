@@ -11,11 +11,6 @@
         }
     },
     "extra": {
-        "laravel": {
-            "providers": [
-
-            ]
-        }
     },
     "minimum-stability": "dev"
 }

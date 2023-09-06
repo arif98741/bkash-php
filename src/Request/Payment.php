@@ -2,29 +2,57 @@
 
 namespace Xenon\BkashPhp\Request;
 
-use JsonException;
+use Xenon\BkashPhp\BkashPhp;
 use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException;
+use Xenon\BkashPhp\Response\BkashResponse;
 
 class Payment
 {
     /**
-     * @param $object
+     * @param BkashPhp $param
      * @param array $paymentData
      * @return object
      * @throws RenderBkashPHPException
-     * @throws JsonException
      */
-    public function createPayment($object, array $paymentData): object
+    public function createPayment(BkashPhp $param, array $paymentData): object
     {
-        $tokenRequestObject = new BkashRequest($object);
-        $tokenRequestObject->setParams($paymentData);
-        $paymentResponse    = $tokenRequestObject->post('tokenized/checkout/create');
-        $paymentObject      = $paymentResponse->getContentsObject();
+        $bkashRequestObject = new BkashRequest($param);
+        $bkashRequestObject->setParams($paymentData);
+        $paymentResponse = $bkashRequestObject->post('tokenized/checkout/create');
+        $paymentObject = $paymentResponse->getContentsObject();
 
-        if ($paymentObject->statusCode === '0000' && $paymentResponse->getStatusCode() === 200 ) {
-            return $paymentObject;
-        }
+        return (new BkashResponse($paymentResponse, $paymentObject))->getResponse();
+    }
 
-        throw new RenderBkashPHPException($paymentObject->statusCode . ': ' . $paymentObject->statusMessage);
+    /**
+     * @param BkashPhp $param
+     * @param $paymentData
+     * @return void
+     * @throws RenderBkashPHPException
+     */
+    public function executePayment(BkashPhp $param, $paymentData)
+    {
+        $bkashRequestObject = new BkashRequest($param);
+        $bkashRequestObject->setParams($paymentData);
+        $paymentResponse = $bkashRequestObject->post('tokenized/checkout/execute');
+        $executePaymentObject = $paymentResponse->getContentsObject();
+
+        return (new BkashResponse($paymentResponse, $executePaymentObject))->getResponse();
+    }
+
+    /**
+     * @param BkashPhp $param
+     * @param $paymentData
+     * @return void
+     * @throws RenderBkashPHPException
+     */
+    public function searchTransaction(BkashPhp $param, $paymentData)
+    {
+        $bkashRequestObject = new BkashRequest($param);
+        $bkashRequestObject->setParams($paymentData);
+        $paymentResponse = $bkashRequestObject->post('tokenized/checkout/general/searchTransaction');
+        $searchPaymentObject = $paymentResponse->getContentsObject();
+
+        return (new BkashResponse($paymentResponse, $searchPaymentObject))->getResponse();
     }
 }
