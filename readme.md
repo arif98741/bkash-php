@@ -130,14 +130,14 @@ That should do it.
 
 
 ### Stargazers
-[![Stargazers repo roster for @arif98741/laravelbdsms](https://reporoster.com/stars/arif98741/laravelbdsms)](https://github.com/arif98741/laravelbdsms/stargazers)
+[![Stargazers repo roster for @arif98741/laravelbdsms](https://reporoster.com/stars/arif98741/bkash-php)](https://github.com/arif98741/bkash-php/stargazers)
 
 ### Forkers
-[![Forkers repo roster for @arif98741/laravelbdsms](https://reporoster.com/forks/arif98741/laravelbdsms)](https://github.com/arif98741/laravelbdsms/network/members)
+[![Forkers repo roster for @arif98741/laravelbdsms](https://reporoster.com/forks/arif98741/bkash-php)](https://github.com/arif98741/bkash-php/network/members)
 
 ### Contributors
-<a href="https://github.com/arif98741/laravelbdsms/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=arif98741/laravelbdsms" />
+<a href="https://github.com/arif98741/bkash-php/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=arif98741/bkash-php" />
 </a>
 
 <br> 
@@ -146,7 +146,5 @@ is missing then make a issue regarding that. If you want to contribute in this l
 do that....
 
 For clear documentation read this blog
-in  [Medium!](https://send-sms-using-laravelbdsms.medium.com/laravel-sms-gateway-package-for-bangladesh-e70af99f2060)
-and also you can download several sms providers documentations as pdf from [this link!](https://github.com/arif98741/laravelbdsms/archive/refs/heads/doc.zip)
 
 
