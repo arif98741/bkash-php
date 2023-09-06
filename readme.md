@@ -1,12 +1,11 @@
 xenon/bkash-php is a Bkash PHP SDK for integrating bkash api in website easily. Follow below steps for better understanding.
 
-# Installation
 
-## Step 1:
+## Step 1: Installation
 ```
 composer require xenon/bkash-php
 ```
-## Step 2:
+## Step 2: Format Configuration
 Create your credentials (array) to use along with `Xenon\BkashPhp\BkashPhp` class
 
 <pre>
@@ -22,11 +21,11 @@ $configuration = [
     ];
 </pre>
 
-## Step 3:
-<pre>use Xenon\BkashPhp\BkashPhp;</pre>
-
+## Step 3: Set Environment
 create object from BkashPhp Class
 <pre>
+use Xenon\BkashPhp\BkashPhp;
+
 $configuration = [
     'config' => [
         "app_key" => "app key goes here",
@@ -41,7 +40,7 @@ $bkash = new BkashPhp($configuration);
 $bkash->setEnvironment('sandbox'); //sandbox|production
 </pre>
 
-## Step: 4
+## Step 4: Exception
 ### Exception Handling
 `use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException`
 
@@ -56,6 +55,7 @@ Bkash payment gateway allows you to create payment url based on different parame
 
 <pre>
 use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException
+use Xenon\BkashPhp\BkashPhp;
 
 try{
    $paymentData = [ 
@@ -103,6 +103,8 @@ After payment done customer will be redirected to merchant callback url having q
 
 Now it's time to call **executePayment()** method with `paymentID`
 <pre>
+use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException
+use Xenon\BkashPhp\BkashPhp;
 
 try{
     $bkash = new BkashPhp($configuration);
@@ -135,6 +137,9 @@ stdClass Object
 ### Query Payment
 #### After successful payment execution, it needs to call **searchTransaction()** method.
 <pre>
+use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException
+use Xenon\BkashPhp\BkashPhp;
+
 try{
     $trxID = request()->trxID; //get trxID from executePayment() method
     $bkash = new BkashPhp($configuration);
