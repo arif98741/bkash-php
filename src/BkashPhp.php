@@ -92,22 +92,35 @@ class BkashPhp
 
     }
 
-    public function executePayment()
+    /**
+     * @param string $paymentId
+     * @return null
+     * @throws RenderBkashPHPException
+     */
+    public function executePayment(string $paymentId)
     {
-
-
+        $this->setHeader($this->getAuthorization());
+        $data = [
+            'paymentID' => $paymentId,
+        ];
+        return (new Payment)->executePayment($this, $data);
     }
+
+
 
     public function queryPayment()
     {
 
     }
 
-    public function searchTransaction()
+    public function searchTransaction(string $trxID)
     {
-
+        $this->setHeader($this->getAuthorization());
+        $data = [
+            'trxID' => $trxID,
+        ];
+        return (new Payment)->searchTransaction($this, $data);
     }
-
 
     /**
      * @return string[]
