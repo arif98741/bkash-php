@@ -1,8 +1,17 @@
 {
     "name": "xenon/bkash-php",
     "description": "This is a php sdk for integrating with your php application easily",
+    "authors": [
+        {
+            "name": "Ariful islam",
+            "email": "arif98741@gmail.com"
+        }
+    ],
     "require": {
-        "guzzlehttp/guzzle": "^6.5.8 | ^7.8"
+        "guzzlehttp/guzzle": "^6.5.8 | ^7.8",
+        "ext-curl": "*",
+        "ext-json": "*",
+        "php": "^7.4|^8.0"
     },
     "license": "MIT",
     "autoload": {
