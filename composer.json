@@ -11,6 +11,5 @@
         }
     },
     "extra": {
-    },
-    "minimum-stability": "dev"
+    }
 }
