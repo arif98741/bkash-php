@@ -4,8 +4,10 @@ namespace Xenon\BkashPhp\Request;
 
 use Xenon\BkashPhp\BkashPhp;
 use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException;
+use Xenon\BkashPhp\Response\BkashResponse;
 
-class Payment {
+class Payment
+{
     /**
      * @param BkashPhp $param
      * @param array $paymentData
@@ -14,16 +16,12 @@ class Payment {
      */
     public function createPayment(BkashPhp $param, array $paymentData): object
     {
-        $tokenRequestObject = new BkashRequest($param);
-        $tokenRequestObject->setParams($paymentData);
-        $paymentResponse    = $tokenRequestObject->post('tokenized/checkout/create');
-        $paymentObject      = $paymentResponse->getContentsObject();
+        $bkashRequestObject = new BkashRequest($param);
+        $bkashRequestObject->setParams($paymentData);
+        $paymentResponse = $bkashRequestObject->post('tokenized/checkout/create');
+        $paymentObject = $paymentResponse->getContentsObject();
 
-        if ($paymentObject->statusCode === '0000' && $paymentResponse->getStatusCode() === 200 ) {
-            return $paymentObject;
-        }
-
-        throw new RenderBkashPHPException($paymentObject->statusCode . ': ' . $paymentObject->statusMessage);
+        return (new BkashResponse($paymentResponse, $paymentObject))->getResponse();
     }
 
     /**
@@ -34,16 +32,12 @@ class Payment {
      */
     public function executePayment(BkashPhp $param, $paymentData)
     {
-        $tokenRequestObject = new BkashRequest($param);
-        $tokenRequestObject->setParams($paymentData);
-        $paymentResponse    = $tokenRequestObject->post('tokenized/checkout/execute');
-        $executePaymentObject      = $paymentResponse->getContentsObject();
+        $bkashRequestObject = new BkashRequest($param);
+        $bkashRequestObject->setParams($paymentData);
+        $paymentResponse = $bkashRequestObject->post('tokenized/checkout/execute');
+        $executePaymentObject = $paymentResponse->getContentsObject();
 
-        if ($executePaymentObject->statusCode === '0000' && $paymentResponse->getStatusCode() === 200 ) {
-            return $executePaymentObject;
-        }
-
-        throw new RenderBkashPHPException($executePaymentObject->statusCode . ': ' . $executePaymentObject->statusMessage);
+        return (new BkashResponse($paymentResponse, $executePaymentObject))->getResponse();
     }
 
     /**
@@ -54,17 +48,11 @@ class Payment {
      */
     public function searchTransaction(BkashPhp $param, $paymentData)
     {
-        $tokenRequestObject = new BkashRequest($param);
-        $tokenRequestObject->setParams($paymentData);
-        $paymentResponse    = $tokenRequestObject->post('tokenized/checkout/general/searchTransaction');
-        $executePaymentObject      = $paymentResponse->getContentsObject();
+        $bkashRequestObject = new BkashRequest($param);
+        $bkashRequestObject->setParams($paymentData);
+        $paymentResponse = $bkashRequestObject->post('tokenized/checkout/general/searchTransaction');
+        $searchPaymentObject = $paymentResponse->getContentsObject();
 
-        if ($executePaymentObject->statusCode === '0000' && $paymentResponse->getStatusCode() === 200 ) {
-            return $executePaymentObject;
-        }
-
-        throw new RenderBkashPHPException($executePaymentObject->statusCode . ': ' . $executePaymentObject->statusMessage);
+        return (new BkashResponse($paymentResponse, $searchPaymentObject))->getResponse();
     }
-
-
 }

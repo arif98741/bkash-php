@@ -48,9 +48,13 @@ class BkashPhp
      * For live use "production"
      * @param string $sandboxEnvironment
      * @return BkashPhp
+     * @throws RenderBkashPHPException
      */
     public function setEnvironment(string $sandboxEnvironment = 'sandbox'): BkashPhp
     {
+        if (!in_array($sandboxEnvironment, ['sandbox', 'production'])) {
+            throw new RenderBkashPHPException("Environment $sandboxEnvironment is not allowed. Allowed environments are: sandbox, production");
+        }
         $this->environment = $sandboxEnvironment;
         return $this;
     }
@@ -105,7 +109,6 @@ class BkashPhp
         ];
         return (new Payment)->executePayment($this, $data);
     }
-
 
 
     public function queryPayment()
