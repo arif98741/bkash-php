@@ -2,21 +2,20 @@
 
 namespace Xenon\BkashPhp\Request;
 
-use Xenon\BkashPhp\Handler\Exception\RenderException;
+use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException;
 
 class Token
 {
     /**
-     * @throws RenderException
+     * @throws RenderBkashPHPException
      */
     public static function getToken(object $object)
     {
         $tokenRequestObject = new BkashRequest($object);
-        $tokenResponse = $tokenRequestObject->post('v1.2.0-beta/tokenized/checkout/token/grant');
-        if ($tokenResponse->getStatusCode() == 200) {
-            $jsonObject = $tokenResponse->getContentsObject();
-            return $jsonObject->id_token;
+        $tokenResponse = $tokenRequestObject->post('tokenized/checkout/token/grant');
+        if ($tokenResponse->getStatusCode() === 200) {
+            return $tokenResponse->getContentsObject()->id_token;
         }
-        throw new RenderException("Failed to generate token. Check credentials");
+        throw new RenderBkashPHPException("Failed to generate token. Check credentials");
     }
 }
