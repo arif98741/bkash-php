@@ -16,7 +16,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class RenderException extends Exception
+class RenderBkashPHPException extends Exception
 {
     /**
      * Report the exception.
