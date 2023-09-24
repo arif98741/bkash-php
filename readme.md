@@ -143,7 +143,7 @@ use Xenon\BkashPhp\BkashPhp;
 try{
     $trxID = request()->trxID; //get trxID from executePayment() method
     $bkash = new BkashPhp($configuration);
-    $executePaymentResponse = $bkash->searchTransaction($trxID);
+    $searchPaymentResponse = $bkash->searchTransaction($trxID);
 }catch(RenderBkashPHPException $e){
     //do whatever you want
 }
