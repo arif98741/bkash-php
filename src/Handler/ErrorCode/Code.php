@@ -2,13 +2,13 @@
 
 namespace Xenon\BkashPhp\Handler\ErrorCode;
 
-use Xenon\LaravelBDSms\Handler\ParameterException;
+use Xenon\BkashPhpLaravel\Handler\Exception\ParameterException;
 
 class Code
 {
     /**
      * @param $key
-     * @return string|void
+     * @return string
      * @throws ParameterException
      */
     public function getExceptionMessage($key)

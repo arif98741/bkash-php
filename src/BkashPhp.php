@@ -15,16 +15,18 @@ class BkashPhp
     /**
      * @var mixed|true
      */
-    private string $environment = 'sandbox';
+    private string $environment;
 
     /**
      * @param array $configuration
+     * @param string $environment
      * @throws RenderBkashPHPException
      */
-    public function __construct(array $configuration)
+    public function __construct(array $configuration, string $environment = 'sandbox')
     {
         $this->configuration = $configuration['config'];
         $this->header = $configuration['headers'];
+        $this->environment = $environment;
         $this->generateToken();
     }
 
@@ -46,6 +48,7 @@ class BkashPhp
     /**
      * Set Environment. For testing use "sandbox"
      * For live use "production"
+     * @deprecated
      * @param string $sandboxEnvironment
      * @return BkashPhp
      * @throws RenderBkashPHPException
@@ -76,7 +79,7 @@ class BkashPhp
     }
 
     /**
-     * @return mixed
+     * @return string
      */
     private function getToken()
     {
@@ -87,9 +90,8 @@ class BkashPhp
      * @param array $paymentData
      * @return object
      * @throws RenderBkashPHPException
-     * @throws JsonException
      */
-    public function createTokenizedPayment(array $paymentData)
+    public function createTokenizedPayment(array $paymentData): object
     {
         $this->setHeader($this->getAuthorization());
         return (new Payment)->createPayment($this, $paymentData);
@@ -110,12 +112,9 @@ class BkashPhp
         return (new Payment)->executePayment($this, $data);
     }
 
-
-    public function queryPayment()
-    {
-
-    }
-
+    /**
+     * @throws RenderBkashPHPException
+     */
     public function searchTransaction(string $trxID)
     {
         $this->setHeader($this->getAuthorization());

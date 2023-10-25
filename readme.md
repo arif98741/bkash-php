@@ -1,6 +1,21 @@
 xenon/bkash-php is a Bkash PHP SDK for integrating bkash api in website easily. Follow below steps for better understanding.
 
 
+<!-- TOC -->
+  * [Step 1: Installation](#step-1-installation)
+  * [Step 2: Format Configuration](#step-2-format-configuration)
+  * [Step 3: Exception](#step-3-exception)
+    * [Exception Handling](#exception-handling)
+  * [Create Payment Url](#create-payment-url)
+      * [If everything goes well then it will return below object. After that redirect to bkashURL from below object](#if-everything-goes-well-then-it-will-return-below-object-after-that-redirect-to-bkashurl-from-below-object)
+  * [Execute Payment](#execute-payment)
+  * [Query Payment](#query-payment)
+    * [After successful payment execution, it needs to call **searchTransaction()** method.](#after-successful-payment-execution-it-needs-to-call-searchtransaction-method)
+  * [Stargazers](#stargazers)
+  * [Forkers](#forkers)
+  * [Contributors](#contributors)
+<!-- TOC -->
+
 ## Step 1: Installation
 ```
 composer require xenon/bkash-php
@@ -21,26 +36,8 @@ $configuration = [
     ];
 </pre>
 
-## Step 3: Set Environment
-create object from BkashPhp Class
-<pre>
-use Xenon\BkashPhp\BkashPhp;
 
-$configuration = [
-    'config' => [
-        "app_key" => "app key goes here",
-        "app_secret" => "app secret goes here",
-    ],
-    'headers' => [
-        "username" => "username goes here",
-        "password" => "password goes here",
-    ]
-];
-$bkash = new BkashPhp($configuration);
-$bkash->setEnvironment('sandbox'); //sandbox|production
-</pre>
-
-## Step 4: Exception
+## Step 3: Exception
 ### Exception Handling
 `use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException`
 
@@ -50,7 +47,7 @@ Always call below methods  under try block. After any of this method failed or e
 **executePayment()**<br>
 **searchTransaction()**
 
-### Create Payment Url
+## Create Payment Url
 Bkash payment gateway allows you to create payment url based on different parameters. Follow below code sample
 
 <pre>
@@ -84,10 +81,10 @@ stdClass Object
     [statusMessage] => Successful
     [paymentID] => TR0011DVJQOkh169400XXX
     [bkashURL] => https://sandbox.payment.bkash.com/redirect/tokenized/?paymentID=TR0011DVJQOkh1694007349990&hash=yaJMHgVb_BW_pJuxErXXXdf8-QFyHHG0bqkwBdUU(NLFwI(-ltH8z36kpnxtxa5Xs5tJxFxW5KoyKN5nWPisXXXXXXXXXXX50209&mode=0011&apiVersion=v1.2.0-beta
-    [callbackURL] => http://http://127.0.0.1/bkash-project/bkash-payment
-    [successCallbackURL] => http://http://127.0.0.1/bkash-project/bkash-payment?paymentID=TR0011DVJQOkh169400XXX&status=success
-    [failureCallbackURL] => http://http://127.0.0.1/bkash-project/bkash-payment?paymentID=TR0011DVJQOkh169400XXX&status=failure
-    [cancelledCallbackURL] => http://http://127.0.0.1/bkash-project/bkash-payment?paymentID=TR0011DVJQOkh169400XXX&status=cancel
+    [callbackURL] => http://example.com/callback
+    [successCallbackURL] => http://example.com/callback?paymentID=TR0011DVJQOkh169400XXX&status=success
+    [failureCallbackURL] => http://example.com/callback?paymentID=TR0011DVJQOkh169400XXX&status=failure
+    [cancelledCallbackURL] => http://example.com/callback?paymentID=TR0011DVJQOkh169400XXX&status=cancel
     [amount] => 10
     [intent] => sale
     [currency] => BDT
@@ -97,7 +94,7 @@ stdClass Object
 )
 </pre>
 
-### Execute Payment
+## Execute Payment
 After payment done customer will be redirected to merchant callback url having query string like below <br>
 `"https://example.com?paymentID=TR0011ZCxlJhC1693137759378&status=success"`
 
@@ -134,8 +131,8 @@ stdClass Object
 )
 </pre>
 
-### Query Payment
-#### After successful payment execution, it needs to call **searchTransaction()** method.
+## Query Payment
+### After successful payment execution, it needs to call **searchTransaction()** method.
 <pre>
 use Xenon\BkashPhp\Handler\Exception\RenderBkashPHPException
 use Xenon\BkashPhp\BkashPhp;
@@ -168,13 +165,15 @@ stdClass Object
 )
 </pre>
 
-### Stargazers
+
+## Stargazers
 [![Stargazers repo roster for @arif98741/bkash-php](https://reporoster.com/stars/arif98741/bkash-php)](https://github.com/arif98741/bkash-php/stargazers)
 
-### Forkers
+## Forkers
 [![Forkers repo roster for @arif98741/bkash-php](https://reporoster.com/forks/arif98741/bkash-php)](https://github.com/arif98741/bkash-php/network/members)
 
-### Contributors
+## Contributors
+
 <a href="https://github.com/arif98741/bkash-php/graphs/contributors">
   <img src="https://contrib.rocks/image?repo=arif98741/bkash-php" />
 </a>
