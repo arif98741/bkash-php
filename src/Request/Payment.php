@@ -27,7 +27,7 @@ class Payment
     /**
      * @param BkashPhp $param
      * @param $paymentData
-     * @return void
+     * @return mixed
      * @throws RenderBkashPHPException
      */
     public function executePayment(BkashPhp $param, $paymentData)
@@ -43,7 +43,7 @@ class Payment
     /**
      * @param BkashPhp $param
      * @param $paymentData
-     * @return void
+     * @return mixed
      * @throws RenderBkashPHPException
      */
     public function searchTransaction(BkashPhp $param, $paymentData)
